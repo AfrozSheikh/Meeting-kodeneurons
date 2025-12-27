@@ -6,14 +6,26 @@ function Meet() {
   const jitsiContainer = useRef(null);
 
   useEffect(() => {
-    if (!window.JitsiMeetExternalAPI) return;
+    if (!window.JitsiMeetExternalAPI || !roomId) return;
 
     const domain = "meet.jit.si";
+
     const options = {
       roomName: roomId,
       parentNode: jitsiContainer.current,
       width: "100%",
       height: "100%",
+
+      configOverwrite: {
+        prejoinPageEnabled: false,
+        disableDeepLinking: true,
+      },
+
+      interfaceConfigOverwrite: {
+        SHOW_JITSI_WATERMARK: false,
+        SHOW_WATERMARK_FOR_GUESTS: false,
+      },
+
       userInfo: {
         displayName: "Guest User",
       },
@@ -24,11 +36,7 @@ function Meet() {
     return () => api.dispose();
   }, [roomId]);
 
-  return (
-    <div className="h-screen w-screen">
-      <div ref={jitsiContainer} className="h-full w-full" />
-    </div>
-  );
+  return <div ref={jitsiContainer} className="h-screen w-screen" />;
 }
 
 export default Meet;
